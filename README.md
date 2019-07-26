@@ -11,4 +11,5 @@
  ![SunSpec® FSK Specifications](https://github.com/zhaohengbo/LIB_AFSK/blob/master/screenshot/1.PNG)
  
  Warning:Not a true AFSK, but the same to AFSK!
+ 
  注意：并非是真的FSK(频率太高)，但解调原理类似！
