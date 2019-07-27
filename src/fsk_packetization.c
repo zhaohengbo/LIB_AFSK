@@ -3,23 +3,31 @@
 
 void Packetize(int16_t message[], int16_t packet[])
 {
-	uint16_t count = 0,new_count = 0;
+	uint16_t read_count = 0,write_count = 0;
 	int16_t msg_sum = message[0];
 	int16_t i;
 	packet_sum = 0;
 	packet[0] = packet[1] = packet[2] = 0;
 	while(1)
 	{
-		count++;
-		if(count >= RX_MESSAGE_SIZE)
+		read_count++;
+		if(read_count >= RX_MESSAGE_SIZE)
 		{
 			break;
 		}
-		msg_sum += message[count];
-		new_count = (((uint32_t)(count + 1) * 47663) >> 19);// 1/NUMBER_OF_BITS_PER_WORD
-		if(((new_count * NUMBER_OF_BITS_PER_WORD) - count ) == (-1))
+		msg_sum += message[read_count];
+		write_count = (((uint32_t)(read_count + 1) * 47663) >> 19);// 1/NUMBER_OF_BITS_PER_WORD
+		/*
+		 *  This is just a simple way to make ((read_count % NUMBER_OF_BITS_PER_WORD) == 0)
+		 *  , where mod cost a long time and can be optimized.
+		 *  w  r
+		 *  0  10
+		 *  1  21
+		 *  2  32
+		 */
+		if((read_count - (write_count * NUMBER_OF_BITS_PER_WORD)) == (-1))
 		{
-			packet[new_count - 1] = msg_sum;
+			packet[write_count - 1] = msg_sum;
 			packet_sum += msg_sum;
 			msg_sum = 0;
 			continue;
